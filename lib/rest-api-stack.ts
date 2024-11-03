@@ -58,6 +58,22 @@ export class RestAPIStack extends cdk.Stack {
       }
     );
 
+    const newSongFn = new lambdanode.NodejsFunction(this, "AddSongFn", {
+      architecture: lambda.Architecture.ARM_64,
+      runtime: lambda.Runtime.NODEJS_16_X,
+      entry: `${__dirname}/../lambdas/addSong.ts`,
+      timeout: cdk.Duration.seconds(10),
+      memorySize: 128,
+      environment: {
+        TABLE_NAME: songsTable.tableName,
+        REGION: "eu-west-1",
+      },
+    });
+
+
+
+
+
     new custom.AwsCustomResource(this, "songsddbInitData", {
       onCreate: {
         service: "DynamoDB",
@@ -77,6 +93,7 @@ export class RestAPIStack extends cdk.Stack {
     // Permissions 
     songsTable.grantReadData(getSongByIdFn)
     songsTable.grantReadData(getAllSongsFn)
+    songsTable.grantReadWriteData(newSongFn)
 
 
 
@@ -105,6 +122,11 @@ export class RestAPIStack extends cdk.Stack {
     songEndpoint.addMethod(
       "GET",
       new apig.LambdaIntegration(getSongByIdFn, { proxy: true })
+    );
+
+    songsEndpoint.addMethod(
+      "POST",
+      new apig.LambdaIntegration(newSongFn, { proxy: true })
     );
   }
 }
