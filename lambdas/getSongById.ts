@@ -1,18 +1,17 @@
-import { Handler } from "aws-lambda";
+import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
 
 const ddbDocClient = createDDbDocClient();
 
-export const handler: Handler = async (event, context) => {
-  try {
-    // Print Event
-    console.log("Event: ", JSON.stringify(event?.queryStringParameters));
-    const parameters = event?.queryStringParameters;
-    const songId = parameters ? parseInt(parameters.songId) : undefined;
-
-    if (!songId) {
+export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {     // Note change
+    try {
+      console.log("[EVENT]", JSON.stringify(event));
+      const parameters  = event?.pathParameters;
+      const songId = parameters?.songId ? parseInt(parameters.songId) : undefined;
+  
+      if (!songId) {
       return {
         statusCode: 404,
         headers: {

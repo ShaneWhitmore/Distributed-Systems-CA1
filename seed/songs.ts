@@ -20,6 +20,16 @@ export const songs: Song[] = [
         adult: true,
         release_date: '1978-05-05',
         title: 'Sin City'
+    },
+    {
+        id: 3,
+        genre: ['Rock', 'Grunge'],
+        original_language: 'en',
+        original_title: "Molly's lips",
+        artist: 'Nirvana',
+        adult: true,
+        release_date: '1991-01-21',
+        title: "Molly's lips"
     }
 
 ]
