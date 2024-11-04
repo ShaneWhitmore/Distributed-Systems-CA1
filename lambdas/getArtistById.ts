@@ -9,22 +9,22 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {    
     try {
       console.log("[EVENT]", JSON.stringify(event));
       const parameters  = event?.pathParameters;
-      const songId = parameters?.songId ? parseInt(parameters.songId) : undefined;
+      const artistId = parameters?.artistId ? parseInt(parameters.artistId) : undefined;
   
-      if (!songId) {
+      if (!artistId) {
       return {
         statusCode: 404,
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify({ Message: "Missing song Id" }),
+        body: JSON.stringify({ Message: "Missing Artist Id" }),
       };
     }
 
     const commandOutput = await ddbDocClient.send(
       new GetCommand({
         TableName: process.env.TABLE_NAME,
-        Key: { id: songId },
+        Key: { id: artistId },
       })
     );
     console.log("GetCommand response: ", commandOutput);
@@ -34,7 +34,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {    
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify({ Message: "Invalid song Id" }),
+        body: JSON.stringify({ Message: "Invalid artist Id" }),
       };
     }
     const body = {

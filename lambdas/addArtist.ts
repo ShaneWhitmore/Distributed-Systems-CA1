@@ -5,7 +5,7 @@ import Ajv from "ajv";
 import schema from "../shared/types.schema.json";
 
 const ajv = new Ajv();
-const isValidBodyParams = ajv.compile(schema.definitions["Song"] || {});
+const isValidBodyParams = ajv.compile(schema.definitions["Artist"] || {});
 const ddbDocClient = createDDbDocClient();
 
 export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
@@ -29,8 +29,8 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
                     "content-type": "application/json",
                 },
                 body: JSON.stringify({
-                    message: `Incorrect type. Must match Song schema`,
-                    schema: schema.definitions["Song"],
+                    message: `Incorrect type. Must match Artist schema`,
+                    schema: schema.definitions["Artist"],
                 }),
             };
         }
@@ -46,7 +46,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event, context) => {
             headers: {
                 "content-type": "application/json",
             },
-            body: JSON.stringify({ message: "Song added" }),
+            body: JSON.stringify({ message: "Artist added" }),
         };
     } catch (error: any) {
         console.log(JSON.stringify(error));
