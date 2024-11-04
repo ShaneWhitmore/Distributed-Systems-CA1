@@ -11,16 +11,17 @@ export type Artist = {
 
 
 export type Song =   {
-  songId: number,
+  artistId: number,
   genre: string[],
   original_language: string,
   title: string,
   artist: string,
   release_date: string,
+  recordLabel: string,
 };
 
 export type songQueryParams = {
-  songId: string;
-  artistName?: string;
+  artistId: string;
+  artist?: string;
   recordLabel?: string;
 };

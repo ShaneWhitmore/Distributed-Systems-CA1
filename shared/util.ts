@@ -1,15 +1,18 @@
 import { marshall } from "@aws-sdk/util-dynamodb";
-import { Artist} from "./types";
+import { Artist , Song} from "./types";
 
-export const generateSongItem = (artist: Artist) => {
+
+type Entity = Artist | Song;
+
+export const generateSongItem = (entity: Entity) => {
   return {
     PutRequest: {
-      Item: marshall(artist),
+      Item: marshall(entity),
     },
   };
 };
 
-export const generateBatch = (data: Artist[]) => {
+export const generateBatch = (data: Entity[]) => {
   return data.map((e) => {
     return generateSongItem(e);
   });

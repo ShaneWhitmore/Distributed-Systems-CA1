@@ -21,28 +21,33 @@ export const artists: Artist[] = [
 
 export const songs: Song[] = [
     {
-        songId: 1,
+        artistId: 1,
         genre: ['Pop'],
         original_language: 'en',
         title: 'Good News',
         artist: 'Mac Miller',
         release_date: '2020-01-09',
+        recordLabel: 'Record Label',
     },
     {
-        songId: 2,
+        artistId: 2,
         genre: ['Rock', 'Blues'],
         original_language: 'en',
         title: 'Sin City',
         artist: 'ACDC',
         release_date: '1978-05-05',
+        recordLabel: 'Record Label',
+
     },
     {
-        songId: 3,
+        artistId: 3,
         genre: ['Rock', 'Grunge'],
         original_language: 'en',
         title: "Molly's lips",
         artist: 'Nirvana',
         release_date: '1991-01-21',
+        recordLabel: 'Record Label',
+
     }
 
 ]
