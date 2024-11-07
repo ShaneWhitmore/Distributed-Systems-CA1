@@ -38,7 +38,17 @@ export class AuthAppStack extends cdk.Stack {
     });
 
     this.auth = authApi.root.addResource("auth");
+
+    this.addAuthRoute(
+      "signup",
+      "POST",
+      "SignupFn",
+      'signup.ts'
+    );
   }
+
+  
+
 
   private addAuthRoute(
     resourceName: string,
@@ -59,6 +69,7 @@ export class AuthAppStack extends cdk.Stack {
         REGION: cdk.Aws.REGION
       },
     };
+    
     
     const resource = this.auth.addResource(resourceName);
     
