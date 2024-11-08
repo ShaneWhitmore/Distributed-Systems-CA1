@@ -137,15 +137,59 @@ export class AppApi extends Construct {
         parameters: {
           RequestItems: {
             [artistTable.tableName]: generateBatch(artists),
-            [songTable.tableName]: generateBatch(songs),  // Added
+            [songTable.tableName]: generateBatch(songs),
           },
         },
         physicalResourceId: custom.PhysicalResourceId.of("artistsddbInitData"), //.of(Date.now().toString()),
       },
       policy: custom.AwsCustomResourcePolicy.fromSdkCalls({
-        resources: [artistTable.tableArn, songTable.tableArn],  // Includes movie cast
+        resources: [artistTable.tableArn, songTable.tableArn],
       }),
     });
+
+    // Permissions 
+    artistTable.grantReadData(getArtistByIdFn)
+    artistTable.grantReadData(getAllArtistsFn)
+    artistTable.grantReadWriteData(newArtistFn)
+
+    songTable.grantReadData(getArtistSongsFn);
+
+    const api = new apig.RestApi(this, "RestAPI", {
+      description: "demo api",
+      deployOptions: {
+        stageName: "dev",
+      },
+      defaultCorsPreflightOptions: {
+        allowHeaders: ["Content-Type", "X-Amz-Date"],
+        allowMethods: ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"],
+        allowCredentials: true,
+        allowOrigins: ["*"],
+      },
+    });
+
+    const artistsEndpoint = api.root.addResource("artists");
+    artistsEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(getAllArtistsFn, { proxy: true })
+    );
+
+    const artistEndpoint = artistsEndpoint.addResource("{artistId}");
+    artistEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(getArtistByIdFn, { proxy: true })
+    );
+
+    artistsEndpoint.addMethod(
+      "POST",
+      new apig.LambdaIntegration(newArtistFn, { proxy: true })
+    );
+
+
+    const artistSongsEndpoint = artistsEndpoint.addResource("song");
+    artistSongsEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(getArtistSongsFn, { proxy: true })
+    );
 
 
     const protectedRes = appApi.root.addResource("protected");
