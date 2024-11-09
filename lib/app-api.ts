@@ -48,6 +48,7 @@ export class AppApi extends Construct {
       defaultCorsPreflightOptions: {
         allowOrigins: apig.Cors.ALL_ORIGINS,
       },
+
     });
 
     const appCommonFnProps = {
@@ -153,43 +154,7 @@ export class AppApi extends Construct {
     artistTable.grantReadWriteData(newArtistFn)
 
     songTable.grantReadData(getArtistSongsFn);
-
-    const api = new apig.RestApi(this, "RestAPI", {
-      description: "demo api",
-      deployOptions: {
-        stageName: "dev",
-      },
-      defaultCorsPreflightOptions: {
-        allowHeaders: ["Content-Type", "X-Amz-Date"],
-        allowMethods: ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"],
-        allowCredentials: true,
-        allowOrigins: ["*"],
-      },
-    });
-
-    const artistsEndpoint = api.root.addResource("artists");
-    artistsEndpoint.addMethod(
-      "GET",
-      new apig.LambdaIntegration(getAllArtistsFn, { proxy: true })
-    );
-
-    const artistEndpoint = artistsEndpoint.addResource("{artistId}");
-    artistEndpoint.addMethod(
-      "GET",
-      new apig.LambdaIntegration(getArtistByIdFn, { proxy: true })
-    );
-
-    artistsEndpoint.addMethod(
-      "POST",
-      new apig.LambdaIntegration(newArtistFn, { proxy: true })
-    );
-
-
-    const artistSongsEndpoint = artistsEndpoint.addResource("song");
-    artistSongsEndpoint.addMethod(
-      "GET",
-      new apig.LambdaIntegration(getArtistSongsFn, { proxy: true })
-    );
+   
 
 
     const protectedRes = appApi.root.addResource("protected");
@@ -227,5 +192,40 @@ export class AppApi extends Construct {
     });
 
     publicRes.addMethod("GET", new apig.LambdaIntegration(publicFn));
+
+
+
+
+
+
+
+
+
+    const artistsEndpoint = appApi.root.addResource("artists");
+    artistsEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(getAllArtistsFn, { proxy: true })
+    );
+
+    const artistEndpoint = artistsEndpoint.addResource("{artistId}");
+    artistEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(getArtistByIdFn, { proxy: true })
+    );
+
+    artistsEndpoint.addMethod(
+      "POST",
+      new apig.LambdaIntegration(newArtistFn, { proxy: true }),
+      {
+        authorizer: requestAuthorizer,
+        authorizationType: apig.AuthorizationType.CUSTOM,
+      } 
+    );
+
+    const artistSongsEndpoint = artistsEndpoint.addResource("song");
+    artistSongsEndpoint.addMethod(
+      "GET",
+      new apig.LambdaIntegration(getArtistSongsFn, { proxy: true })
+    );
   }
 }
