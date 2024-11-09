@@ -3,7 +3,7 @@
 
 __Name:__ Shane Whitmore
 
-__Demo:__ ... link to your YouTube video demonstration ......
+__Demo:__ [... link to your YouTube video demonstration ......](https://youtu.be/rcZHt4Y8hwA)
 
 ### !!!!!!!!!!!!!!! ATTENTION !!!!!!!!!!!!!!
 Please use the 'AuthUpdate' branch as it contains the latest version of the assignment
