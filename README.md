@@ -11,19 +11,43 @@ Please use the 'AuthUpdate' branch as it contains the latest version of the assi
 
 State the context you chose for your web API and detail the attributes stored in the main database table.
 
+I chose to use music Artists and their songs as the context for this assignment. The main attributes include:
++ Artists: 
+    + id
+    + artistName
+    + recordLabel
++ Songs:
+    + artistId
+    + genre
+    + origional_language
+    + title
+    + artist
+    + release_date
+    + recordLabel
+
+
+
 ### App API endpoints.
 
-[ Provide a bullet-point list of the app's endpoints (excluding the Auth API) you have successfully implemented. ]
-e.g.
- 
-+ POST /thing - add a new 'thing'.
-+ GET /thing/{partition-key}/ - Get all the 'things' with a specified partition key.
-+ GEtT/thing/{partition-key}?attributeX=value - Get all the 'things' with a specified partition key value and attributeX satisfying the condition .....
+#### App endpoints
++ POST /artists - add a new artist to the database (protected by authorisation)
++ GET /artists - get a list of all artists in the database
++ GET /artists/{artistId} - get a list of songs by an artist using the artistId
++ GET /artists/song?artistId=valueX - get all songs from an artist whos 'artistId' matches 'valueX'
++ GET /artists/song?artistId=valueX&recordLabel=valueY - get all songs from an artist whos 'artistId' matches 'valueX' and whos recordLabel matches 'valueY'
++ GET /artists/song?artistId=valueX&artist=valueY - get all songs from an artist whos 'artistId' matched 'valueX' and whos name matches 'valueY' 
+
+#### Auth API endpoints
++ POST auth/signup allows users to create an account & a confimation code is sent via email
++ POST auth/confirm_signup allows user to confirm their email address via the code sent by email
++ POST auth/signin allows users to sign into their account and receive a token required for adding artists to the database
++ POST auth/signout allows users to sign out
 
 ### Update constraint (if relevant).
 
 [Briefly explain your design for the solution to the PUT/Update constraint 
 - only the user who added an item to the main table could update it.]
+
 
 ### Translation persistence (if relevant).
 
